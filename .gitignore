@@ -1,0 +1,10 @@
+**/.idea/
+**/.vscode/
+
+**/*.env
+**/certs/
+
+**/*.venv/
+**/__pycache__/
+
+**/*.log

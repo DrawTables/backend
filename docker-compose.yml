@@ -1,0 +1,95 @@
+version: "3.4"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: ff2-redis
+    hostname: redis_host
+    restart: always
+
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASS}
+
+    volumes:
+      - redis-volume:/data
+    networks:
+      - backend-network
+    ports:
+      - "127.0.0.1:${REDIS_PORT_EXTERNAL}:${REDIS_PORT}"
+
+  backend-postgres:
+    image: postgres:12-alpine
+    container_name: ff2-backend-postgres
+    hostname: backend_postgres_host
+    restart: always
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"
+        max-file: "2"
+
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_DB=${POSTGRES_BASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+
+    volumes:
+      - backend-postgres-volume:/var/lib/postgresql/data/pgdata
+    networks:
+      - backend-network
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT_EXTERNAL}:${POSTGRES_PORT}"
+
+  backend:
+    build:
+      context: ./
+      dockerfile: ./docker/backend/Dockerfile
+    depends_on:
+      - redis
+
+    container_name: ff2-backend
+    hostname: backend_host
+    restart: always
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"
+        max-file: "2"
+
+    environment:
+      - BACKEND_API_PORT=${BACKEND_API_PORT}
+
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASS}
+
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASS=${POSTGRES_PASS}
+      - POSTGRES_BASE=${POSTGRES_BASE}
+
+      - CERTS_DIR_NAME=${CERTS_DIR_NAME}
+      - JWT_PRIVATE_KEY_NAME=${JWT_PRIVATE_KEY_NAME}
+      - JWT_PUBLIC_KEY_NAME=${JWT_PUBLIC_KEY_NAME}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - REFRESH_TOKEN_EXPIRE_MINUTES=${REFRESH_TOKEN_EXPIRE_MINUTES}
+
+    networks:
+      - backend-network
+    ports:
+      - "127.0.0.1:${BACKEND_API_PORT_EXTERNAL}:${BACKEND_API_PORT}"
+
+volumes:
+  redis-volume:
+  backend-postgres-volume:
+
+networks:
+  backend-network:
+    driver: bridge
