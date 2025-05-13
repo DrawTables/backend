@@ -7,6 +7,7 @@ from fastapi.openapi.utils import get_openapi
 from src.auth.by_password.router import router_v1 as auth_by_login_router_v1
 from src.auth.tokens.router import router_v1 as tokens_router_v1
 from src.config import settings
+from src.tables.table_position.router import router_v1 as tables_positions_router_v1
 from src.users.user.router import router_v1 as users_router_v1
 
 app = FastAPI()
@@ -49,6 +50,8 @@ app.include_router(docs_router)
 app.include_router(auth_by_login_router_v1)
 app.include_router(tokens_router_v1)
 app.include_router(users_router_v1)
+
+app.include_router(tables_positions_router_v1)
 
 if __name__ == "__main__":
     uvicorn.run(
