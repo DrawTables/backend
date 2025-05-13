@@ -3,7 +3,7 @@ version: "3.4"
 services:
   redis:
     image: redis:latest
-    container_name: ff2-redis
+    container_name: drawtables-redis
     hostname: redis_host
     restart: always
 
@@ -21,7 +21,7 @@ services:
 
   backend-postgres:
     image: postgres:12-alpine
-    container_name: ff2-backend-postgres
+    container_name: drawtables-backend-postgres
     hostname: backend_postgres_host
     restart: always
 
@@ -51,7 +51,7 @@ services:
     depends_on:
       - redis
 
-    container_name: ff2-backend
+    container_name: drawtables-backend
     hostname: backend_host
     restart: always
 
