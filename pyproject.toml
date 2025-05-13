@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-uvicorn = "^0.34.2"
 fastapi = "^0.115.12"
 sqlalchemy = "^2.0.40"
 python-dotenv = "^1.1.0"
@@ -17,6 +16,8 @@ bcrypt = "^4.3.0"
 pyjwt = {extras = ["crypto"], version = "^2.10.1"}
 python-multipart = "^0.0.20"
 redis = "^6.0.0"
+websockets = "^15.0.1"
+uvicorn = "^0.34.2"
 
 
 [tool.poetry.group.dev.dependencies]
