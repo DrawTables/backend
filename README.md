@@ -49,7 +49,7 @@ source .venv/bin/activate
 poetry install --no-root
 ```
 
-## 5.1 Миграции
+## 5. Миграции
 ```shell
 alembic upgrade heads
 ```
