@@ -1,6 +1,6 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from src.tables.table_position.websocket_manager import ConnectionManager
+from src.tables.table_position.websockets_ import ConnectionManager
 
 ROUTER_V1_PREFIX = "/ws/tables-positions"
 
