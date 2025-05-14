@@ -5,10 +5,7 @@ from src.tables.table_position.use_cases import synchronize_tables_positions
 
 ROUTER_V1_PREFIX = "/ws/v1/tables-positions"
 
-router_v1 = APIRouter(
-    prefix=ROUTER_V1_PREFIX,
-    tags=["Users v1"],
-)
+router_v1 = APIRouter(prefix=ROUTER_V1_PREFIX)
 
 
 @router_v1.websocket("/{project_id}/{user_id}")
