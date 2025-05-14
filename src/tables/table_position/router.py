@@ -1,8 +1,9 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from pydantic import UUID4
 
 from src.tables.table_position.websockets_ import ConnectionManager
 
-ROUTER_V1_PREFIX = "/ws/tables-positions"
+ROUTER_V1_PREFIX = "/ws/v1/tables-positions"
 
 router_v1 = APIRouter(
     prefix=ROUTER_V1_PREFIX,
@@ -12,17 +13,33 @@ router_v1 = APIRouter(
 manager = ConnectionManager()
 
 
-@router_v1.websocket("/{room_id}/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, room_id: int, user_id: int, username: str):
-    print(f"{room_id=}")
-    await manager.connect(websocket, room_id, user_id)
-    await manager.broadcast(f"{username} (ID: {user_id}) присоединился к чату.", room_id, user_id)
+@router_v1.websocket("/{project_id}/{user_id}")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    project_id: UUID4,
+    user_id: UUID4,
+):
+    await manager.connect(websocket, project_id, user_id)
+    await manager.broadcast(
+        project_id=project_id,
+        sender_id=user_id,
+        message=f"Пользователь с ID: [{user_id}] присоединился к чату.",
+    )
 
     try:
         while True:
             data = await websocket.receive_text()
             print(f"{data=}")
-            await manager.broadcast(f"{username} (ID: {user_id}): {data}", room_id, user_id)
+            await manager.broadcast(
+                project_id=project_id,
+                sender_id=user_id,
+                message=f"Сообщение: {data}",
+            )
+
     except WebSocketDisconnect:
-        manager.disconnect(room_id, user_id)
-        await manager.broadcast(f"{username} (ID: {user_id}) покинул чат.", room_id, user_id)
+        manager.disconnect(project_id=project_id, user_id=user_id)
+        await manager.broadcast(
+            project_id=project_id,
+            sender_id=user_id,
+            message=f"Пользователь с ID: [{user_id}] покинул чат.",
+        )
