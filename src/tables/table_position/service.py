@@ -10,9 +10,9 @@ async def broadcast_tables_coordinates(
     project_id: UUID4,
     user_id: UUID4,
 ):
-    data = await websocket.receive_text()
+    data: dict = await websocket.receive_json()
     await websocket_manager.broadcast(
         project_id=project_id,
         sender_id=user_id,
-        data={"message": f"Сообщение: {data}"},
+        data=data,
     )
