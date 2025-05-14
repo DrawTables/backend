@@ -23,17 +23,16 @@ async def websocket_endpoint(
     await manager.broadcast(
         project_id=project_id,
         sender_id=user_id,
-        message=f"Пользователь с ID: [{user_id}] присоединился к чату.",
+        data={"message": f"Пользователь с ID: [{user_id}] присоединился к чату."},
     )
 
     try:
         while True:
             data = await websocket.receive_text()
-            print(f"{data=}")
             await manager.broadcast(
                 project_id=project_id,
                 sender_id=user_id,
-                message=f"Сообщение: {data}",
+                data={"message": f"Сообщение: {data}"},
             )
 
     except WebSocketDisconnect:
@@ -41,5 +40,5 @@ async def websocket_endpoint(
         await manager.broadcast(
             project_id=project_id,
             sender_id=user_id,
-            message=f"Пользователь с ID: [{user_id}] покинул чат.",
+            data={"message": f"Пользователь с ID: [{user_id}] покинул чат."},
         )

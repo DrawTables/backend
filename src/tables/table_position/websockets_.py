@@ -46,12 +46,15 @@ class ConnectionManager:
         self,
         project_id: UUID4,
         sender_id: UUID4,
-        message: str,
+        data: dict,
     ):
         """
         Рассылает сообщение всем пользователям в комнате.
         """
         if project_id in self.active_connections:
             for user_id, connection in self.active_connections[project_id].items():
-                message_with_class = {"text": message, "is_self": user_id == sender_id}
+                message_with_class = {
+                    "is_self": user_id == sender_id,
+                    "data": data,
+                }
                 await connection.send_json(message_with_class)
