@@ -41,6 +41,7 @@ async def openapi(request: Request):
 
 origins = [
     "http://localhost:3055",
+    "http://localhost:5173",
     "http://localhost",
 ]
 app.add_middleware(
