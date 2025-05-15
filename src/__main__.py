@@ -25,7 +25,7 @@ SWAGGER_UI_HTML = get_swagger_ui_html(
 )
 
 
-@docs_router.get("/", include_in_schema=False)
+@docs_router.get("", include_in_schema=False)
 async def get_documentation():
     return SWAGGER_UI_HTML
 
