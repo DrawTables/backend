@@ -33,7 +33,7 @@ async def get_documentation():
 @docs_router.get("/openapi.json", include_in_schema=False)
 async def openapi(request: Request):
     return get_openapi(
-        title="Draw Tables API",
+        title="DrawTables API",
         version="0.1.0",
         routes=request.app.routes,
     )
