@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+PROJECT_DIR_PATH = Path(__file__).parent.parent
+sys.path.append(str(PROJECT_DIR_PATH))
+
 import uvicorn
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +14,7 @@ from src.auth.by_password.router import router_v1 as auth_by_login_router_v1
 from src.auth.tokens.router import router_v1 as tokens_router_v1
 from src.config import settings
 from src.users.user.router import router_v1 as users_router_v1
+from src.projects.projects_routes import projects_routers_v1
 
 app = FastAPI()
 
@@ -26,7 +33,7 @@ async def get_documentation():
 @docs_router.get("/openapi.json", include_in_schema=False)
 async def openapi(request: Request):
     return get_openapi(
-        title="Dewu-Parser API",
+        title="Draw Tables API",
         version="0.1.0",
         routes=request.app.routes,
     )
@@ -50,6 +57,9 @@ app.include_router(auth_by_login_router_v1)
 app.include_router(tokens_router_v1)
 app.include_router(users_router_v1)
 
+for router in projects_routers_v1:
+    app.include_router(router)
+    
 if __name__ == "__main__":
     uvicorn.run(
         "src.__main__:app",
