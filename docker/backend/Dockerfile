@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.52.0-noble
+FROM python:3.12.10-alpine
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -12,7 +12,6 @@ RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=$POETRY_HOME pytho
 COPY pyproject.toml poetry.lock ./
 
 RUN poetry install --only main --no-root
-RUN poetry run playwright install
 
 COPY $SRC_DIR $SRC_DIR
 COPY ./certs ./certs
