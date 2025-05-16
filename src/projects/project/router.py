@@ -82,10 +82,20 @@ async def update_project(
     project_id: str,
     project_update_request: ProjectUpdateRequest,
 ):
-    await use_cases.update_project(
-        project_id, project_update_request
-    )
+    await use_cases.update_project(project_id, project_update_request)
 
+
+@projects_router_v1.put(
+    path="{project_id}/users",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(project_by_id_exists), Depends(user_can_change_project)],
+)
+async def add_user_to_project(
+    project_id: str,
+    body: ProjectUserPermissionsRequest,
+    user: dict = Depends(current_user),
+):
+    await use_cases.change_user_permissions(project_id, body)
 
 @projects_router_v1.delete(
     path="/{project_id}",
