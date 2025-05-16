@@ -29,6 +29,9 @@ class VersionResponseSchema(ResponseModel):
     version_id: UUID4
     project_id: UUID4
     tag: str
-    dbml_text: str
     parent_id: UUID4 | None = Field(default=None)
     created_at: datetime
+    
+    
+class VersionResponseExtendedSchema(ResponseModel):
+    dbml_text: str

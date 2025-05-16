@@ -8,7 +8,7 @@ from src.projects.project.dependencies import (
 )
 from src.projects.version import use_cases
 from src.projects.version.dependencies import version_by_id_exists
-from src.projects.version.schemas import VersionCreateSchema, VersionResponseSchema
+from src.projects.version.schemas import VersionCreateSchema, VersionResponseSchema, VersionResponseExtendedSchema
 
 ROUTER_V1_PREFIX = "/api/v1/projects/versions"
 
@@ -33,6 +33,23 @@ async def get_versions(
         project_id=project_id,
     )
     return versions
+
+
+@versions_router_v1.get(
+    path="/{version_id}",
+    response_model=VersionResponseExtendedSchema,
+    dependencies=[
+        Depends(version_by_id_exists),
+        Depends(user_have_read_access_to_project),
+    ],
+)
+async def get_version(
+    version_id: UUID4,
+) -> VersionResponseExtendedSchema:
+    version = await use_cases.get_version(
+        version_id=version_id,
+    )
+    return version
 
 
 @versions_router_v1.post(

@@ -22,6 +22,18 @@ async def get_versions(
     return versions
 
 
+async def get_version(
+    version_id: UUID4,
+) -> VersionResponseSchema:
+    uow = UnitOfWork()
+    async with uow:
+        version = await uow.versions.get_by_id(
+            entity_id=version_id,
+        )
+
+    return version
+
+
 async def create_version(
     project_id: UUID4,
     body: VersionCreateSchema,
