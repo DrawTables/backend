@@ -1,0 +1,7 @@
+import re
+
+
+def remove_code_markers(text):
+    pattern = r"^```dbml\n(.*?)```$"
+    result = re.sub(pattern, r"\1", text, flags=re.DOTALL)
+    return result

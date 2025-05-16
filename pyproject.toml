@@ -17,6 +17,7 @@ bcrypt = "^4.3.0"
 pyjwt = {extras = ["crypto"], version = "^2.10.1"}
 python-multipart = "^0.0.20"
 redis = "^6.0.0"
+openai = "^1.78.1"
 
 
 [tool.poetry.group.dev.dependencies]

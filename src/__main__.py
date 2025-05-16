@@ -15,6 +15,7 @@ from src.auth.tokens.router import router_v1 as tokens_router_v1
 from src.config import settings
 from src.users.user.router import router_v1 as users_router_v1
 from src.projects.projects_routes import projects_routers_v1
+from src.ai_assistant.routes import ai_assistant_router_v1
 
 app = FastAPI()
 
@@ -57,6 +58,7 @@ app.include_router(docs_router)
 app.include_router(auth_by_login_router_v1)
 app.include_router(tokens_router_v1)
 app.include_router(users_router_v1)
+app.include_router(ai_assistant_router_v1)
 
 for router in projects_routers_v1:
     app.include_router(router)
