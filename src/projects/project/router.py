@@ -84,7 +84,7 @@ async def update_project(
 
 
 @projects_router_v1.put(
-    path="{project_id}/users",
+    path="/{project_id}/users",
     status_code=status.HTTP_204_NO_CONTENT,
     dependencies=[Depends(project_by_id_exists), Depends(user_can_change_project)],
 )
