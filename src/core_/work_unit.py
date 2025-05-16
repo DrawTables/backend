@@ -4,7 +4,7 @@ from src.core_.repository import IRepository
 from src.infrastructure.database.database import async_session_maker
 from src.users.user.repositories import UserRepository
 from src.projects.project.repositories import ProjectRepository, ProjectRealtionUserRepository
-
+from src.projects.version.repositories import VersionRepository
 
 class IUnitOfWork(Protocol):
     # Users
@@ -13,6 +13,7 @@ class IUnitOfWork(Protocol):
     #Projects
     projects: IRepository
     projects_relation_users: IRepository
+    versions: IRepository
 
 
 class UnitOfWork:
@@ -32,6 +33,7 @@ class UnitOfWork:
         # Projects
         self.projects = ProjectRepository(self._session)
         self.projects_relation_users = ProjectRealtionUserRepository(self._session)
+        self.versions = VersionRepository(self._session)
         
     async def __aexit__(self, *args):
         await self.rollback()

@@ -3,10 +3,15 @@ from pydantic import UUID4
 from src.core_.pagination.schemas import PaginationParams
 from src.core_.specifications import Specification
 from src.core_.work_unit import UnitOfWork
-from src.projects.project.schemas import ProjectCreateRequest, ProjectUpdateRequest, ProjectSchema, ProjectUserPermissionsRequest
+from src.projects.project.schemas import (
+    ProjectCreateRequest,
+    ProjectSchema,
+    ProjectUpdateRequest,
+    ProjectUserPermissionsRequest,
+)
 from src.projects.project.specifications import (
     ProjectByOwnerIdSpecification,
-    ProjectUserHasAccessSpecification,
+    ProjectsUserHasAccessSpecification,
 )
 
 
@@ -28,17 +33,17 @@ async def get_projects(
         specification &= ProjectByOwnerIdSpecification(user_id=user_id)
 
     if request_user_id:
-        specification &= ProjectUserHasAccessSpecification(user_id=request_user_id)
+        specification &= ProjectsUserHasAccessSpecification(user_id=request_user_id)
 
     async with uow:
-        projects =  await uow.projects.get_by_filters(
+        projects = await uow.projects.get_by_filters(
             specification=specification,
             pagination=pagination_params,
         )
         amount = await uow.projects.amount(
             specification=specification,
         )
-        
+
     return amount, projects
 
 
@@ -94,6 +99,6 @@ async def change_user_permissions(
                 filter_by={
                     "project_id": project_id,
                     "user_id": body.user_id,
-                }
+                },
             )
         await uow.commit()

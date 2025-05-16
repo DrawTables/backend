@@ -1,17 +1,15 @@
 from fastapi import APIRouter, Depends, Query, Response, status
 from pydantic import UUID4
 
-from src.auth.tokens.dependencies import (
-    get_current_user as current_user,
-)
-from src.projects.project import use_cases
-from src.projects.project.dependencies import project_by_id_exists
 from src.auth.tokens.dependencies import get_current_user as current_user
 from src.auth.tokens.dependencies import is_verified_user
 from src.core_.pagination.dependencies import PaginationParamsDependency
 from src.core_.pagination.schemas import PaginationResponse
 from src.projects.project import use_cases
-from src.projects.project.dependencies import project_by_id_exists, user_can_change_project
+from src.projects.project.dependencies import (
+    project_by_id_exists,
+    user_can_change_project,
+)
 from src.projects.project.schemas import (
     ProjectCreateRequest,
     ProjectResponse,
@@ -96,6 +94,7 @@ async def add_user_to_project(
     user: dict = Depends(current_user),
 ):
     await use_cases.change_user_permissions(project_id, body)
+
 
 @projects_router_v1.delete(
     path="/{project_id}",

@@ -1,11 +1,11 @@
 from pydantic import UUID4
-from sqlalchemy import or_, not_
+from sqlalchemy import not_, or_
 
 from src.core_.specifications import Specification
 from src.projects.project.models import Project, ProjectRealtionUser
 
 
-class ProjectUserHasAccessSpecification(Specification):
+class ProjectsUserHasAccessSpecification(Specification):
     _models_for_join_onclause = [
         {
             "target": ProjectRealtionUser,
