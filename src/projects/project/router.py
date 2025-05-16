@@ -1,14 +1,22 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
+from pydantic import UUID4
 
 from src.auth.tokens.dependencies import (
     get_current_user as current_user,
 )
 from src.projects.project import use_cases
 from src.projects.project.dependencies import project_by_id_exists
+from src.auth.tokens.dependencies import get_current_user as current_user
+from src.auth.tokens.dependencies import is_verified_user
+from src.core_.pagination.dependencies import PaginationParamsDependency
+from src.core_.pagination.schemas import PaginationResponse
+from src.projects.project import use_cases
+from src.projects.project.dependencies import project_by_id_exists, user_can_change_project
 from src.projects.project.schemas import (
     ProjectCreateRequest,
     ProjectResponse,
     ProjectUpdateRequest,
+    ProjectUserPermissionsRequest,
 )
 
 ROUTER_V1_PREFIX = "/api/v1/projects"
@@ -16,7 +24,29 @@ ROUTER_V1_PREFIX = "/api/v1/projects"
 projects_router_v1 = APIRouter(
     prefix=ROUTER_V1_PREFIX,
     tags=["Projects v1"],
+    dependencies=[Depends(is_verified_user)],
 )
+
+
+@projects_router_v1.get(
+    path="",
+    response_model=PaginationResponse[ProjectResponse],
+)
+async def get_projects(
+    pagination_params: PaginationParamsDependency,
+    user_id: UUID4 = Query(default=None, alias="userId"),
+    user: dict = Depends(current_user),
+) -> PaginationResponse[ProjectResponse]:
+    request_user_id = user.user_id
+    amount, projects = await use_cases.get_projects(
+        pagination_params=pagination_params,
+        user_id=user_id,
+        request_user_id=request_user_id,
+    )
+    return {
+        "entities": projects,
+        "entities_amount": amount,
+    }
 
 
 @projects_router_v1.get(
@@ -46,19 +76,21 @@ async def create_project(
 @projects_router_v1.patch(
     path="/{project_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(project_by_id_exists)],
+    dependencies=[Depends(project_by_id_exists), Depends(user_can_change_project)],
 )
 async def update_project(
     project_id: str,
     project_update_request: ProjectUpdateRequest,
 ):
-    await use_cases.update_project(project_id, project_update_request)
+    await use_cases.update_project(
+        project_id, project_update_request
+    )
 
 
 @projects_router_v1.delete(
     path="/{project_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(project_by_id_exists)],
+    dependencies=[Depends(project_by_id_exists), Depends(user_can_change_project)],
 )
 async def delete_project(
     project_id: str,

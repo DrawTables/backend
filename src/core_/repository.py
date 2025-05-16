@@ -419,22 +419,18 @@ class SQLAlchemyRepository:
         res = await self._session.execute(stmt)
         return res.scalar_one()
 
-    async def upsert(self, data: dict, **filter_by) -> UUID4 | int:
-        stmt = select(self._model).filter_by(**filter_by)
-        res = await self._session.execute(stmt)
-        model = res.scalar()
+    async def upsert(self, data: dict, filter_by: dict) -> UUID4 | int:
+        entity = await self.get_by_filters(
+            filter_by=filter_by,
+        )
+        if len(entity) > 0:
+            entity = entity[0]
+            entity_id = entity.id
+            await self.update_by_id(
+                entity_id=entity_id,
+                data=data,
+            )
+        else:
+            entity_id = await self.create(data=data)
 
-        if model is None:
-            data = dict() if (data is None) else data
-
-            model = self._model(**data)
-            self._session.add(model)
-
-            await self._session.flush()
-            await self._session.refresh(model)
-            return model.id
-
-        for key, value in data.items():
-            setattr(model, key, value)
-
-        return model.id
+        return entity_id

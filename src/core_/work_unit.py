@@ -3,13 +3,16 @@ from typing import Protocol
 from src.core_.repository import IRepository
 from src.infrastructure.database.database import async_session_maker
 from src.users.user.repositories import UserRepository
-from src.projects.project.repositories import ProjectRepository
+from src.projects.project.repositories import ProjectRepository, ProjectRealtionUserRepository
 
 
 class IUnitOfWork(Protocol):
     # Users
     users: IRepository
+    
+    #Projects
     projects: IRepository
+    projects_relation_users: IRepository
 
 
 class UnitOfWork:
@@ -28,6 +31,7 @@ class UnitOfWork:
 
         # Projects
         self.projects = ProjectRepository(self._session)
+        self.projects_relation_users = ProjectRealtionUserRepository(self._session)
         
     async def __aexit__(self, *args):
         await self.rollback()

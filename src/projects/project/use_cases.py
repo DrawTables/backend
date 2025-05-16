@@ -1,9 +1,13 @@
-from datetime import datetime, timezone
-
 from pydantic import UUID4
 
+from src.core_.pagination.schemas import PaginationParams
+from src.core_.specifications import Specification
 from src.core_.work_unit import UnitOfWork
-from src.projects.project.schemas import ProjectCreateRequest, ProjectUpdateRequest
+from src.projects.project.schemas import ProjectCreateRequest, ProjectUpdateRequest, ProjectSchema, ProjectUserPermissionsRequest
+from src.projects.project.specifications import (
+    ProjectByOwnerIdSpecification,
+    ProjectUserHasAccessSpecification,
+)
 
 
 async def get_project_by_id(project_id: UUID4):
@@ -12,10 +16,30 @@ async def get_project_by_id(project_id: UUID4):
         return await uow.projects.get_by_id(entity_id=project_id)
 
 
-async def get_projects():
+async def get_projects(
+    pagination_params: PaginationParams | None = None,
+    user_id: UUID4 | None = None,
+    request_user_id: UUID4 | None = None,
+) -> tuple[int, list[ProjectSchema]]:
     uow = UnitOfWork()
+    specification = Specification()
+
+    if user_id:
+        specification &= ProjectByOwnerIdSpecification(user_id=user_id)
+
+    if request_user_id:
+        specification &= ProjectUserHasAccessSpecification(user_id=request_user_id)
+
     async with uow:
-        return await uow.projects.get_by_filters()
+        projects =  await uow.projects.get_by_filters(
+            specification=specification,
+            pagination=pagination_params,
+        )
+        amount = await uow.projects.amount(
+            specification=specification,
+        )
+        
+    return amount, projects
 
 
 async def create_project(body: ProjectCreateRequest, owner_user_id: UUID4) -> UUID4:
@@ -46,4 +70,30 @@ async def delete_project(project_id: UUID4):
     uow = UnitOfWork()
     async with uow:
         await uow.projects.delete_by_id(entity_id=project_id)
+        await uow.commit()
+
+
+async def change_user_permissions(
+    project_id: UUID4,
+    body: ProjectUserPermissionsRequest,
+):
+    uow = UnitOfWork()
+    data = body.model_dump()
+    data["project_id"] = project_id
+    async with uow:
+        if body.read_permission is False and body.write_permission is False:
+            await uow.projects_relation_users.delete(
+                filter_by={
+                    "project_id": project_id,
+                    "user_id": body.user_id,
+                }
+            )
+        else:
+            await uow.projects_relation_users.upsert(
+                data=data,
+                filter_by={
+                    "project_id": project_id,
+                    "user_id": body.user_id,
+                }
+            )
         await uow.commit()
