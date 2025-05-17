@@ -81,15 +81,17 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
       - REFRESH_TOKEN_EXPIRE_MINUTES=${REFRESH_TOKEN_EXPIRE_MINUTES}
 
+    volumes:
+      - /certs/drawtables/backend:/${CERTS_DIR_NAME}
+
     networks:
       - backend-network
     ports:
       - "127.0.0.1:${BACKEND_API_PORT_EXTERNAL}:${BACKEND_API_PORT}"
 
 volumes:
-  - /certs/drawtables/backend:/certs
-  # - redis-volume:
-  # - backend-postgres-volume:
+  redis-volume:
+  backend-postgres-volume:
 
 networks:
   backend-network:
