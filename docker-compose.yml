@@ -74,6 +74,7 @@ services:
       - POSTGRES_PASS=${POSTGRES_PASS}
       - POSTGRES_BASE=${POSTGRES_BASE}
 
+      - OPEN_AI_API_KEY=${OPEN_AI_API_KEY}
       - CERTS_DIR_NAME=${CERTS_DIR_NAME}
       - JWT_PRIVATE_KEY_NAME=${JWT_PRIVATE_KEY_NAME}
       - JWT_PUBLIC_KEY_NAME=${JWT_PUBLIC_KEY_NAME}
@@ -81,16 +82,17 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
       - REFRESH_TOKEN_EXPIRE_MINUTES=${REFRESH_TOKEN_EXPIRE_MINUTES}
 
+    volumes:
+      - /certs/drawtables/backend:/${CERTS_DIR_NAME}
+
     networks:
       - backend-network
     ports:
       - "127.0.0.1:${BACKEND_API_PORT_EXTERNAL}:${BACKEND_API_PORT}"
 
 volumes:
-- /certs/drawtables/backend: /$CERTS_DIR_NAME
   redis-volume:
   backend-postgres-volume:
-
 
 networks:
   backend-network:

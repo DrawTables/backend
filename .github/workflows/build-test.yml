@@ -18,8 +18,11 @@ jobs:
       - name: Create Env-files
         run: cp docker/docker-compose.env.template docker/docker-compose.env
 
+      - name: Create Dir for Certs
+        run: mkdir certs
+
       - name: Build the Docker Image
-        run: docker compose --env-file ./docker/docker-compose.env build backend 
+        run: docker compose --env-file ./docker/docker-compose.env build backend
 
       - name: Remove Container
         run: docker ps -a --format="{{.ID}} {{.Names}}"
