@@ -83,7 +83,7 @@ services:
       - REFRESH_TOKEN_EXPIRE_MINUTES=${REFRESH_TOKEN_EXPIRE_MINUTES}
 
     volumes:
-      - /certs/drawtables/backend:/${CERTS_DIR_NAME}
+      - /certs/drawtables/backend:/backend/${CERTS_DIR_NAME}
 
     networks:
       - backend-network
