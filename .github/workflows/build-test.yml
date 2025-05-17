@@ -6,6 +6,7 @@ on:
 env:
   OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
 
+jobs:
   build:
     runs-on:
       labels: runner-production
