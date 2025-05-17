@@ -132,11 +132,12 @@ async def delete_last_version(
             parent_version = await uow.versions.get_by_id(
                 entity_id=last_version[0].parent_id,
             )
-            await uow.versions.delete(entity_id=last_version[0].parent_id)
-            await uow.versions.update_by_id(
-                entity_id=last_version[0].version_id,
-                data={
-                    "parent_id": parent_version.parent_id,
-                },
-            )
+            if parent_version:
+                await uow.versions.delete(entity_id=last_version[0].parent_id)
+                await uow.versions.update_by_id(
+                    entity_id=last_version[0].version_id,
+                    data={
+                        "parent_id": parent_version.parent_id,
+                    },
+                )
         await uow.commit()
