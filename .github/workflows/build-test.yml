@@ -8,7 +8,7 @@ env:
 
   build:
     runs-on:
-      labels: runner-test
+      labels: runner-production
 
     steps:
       - name: Get Updates
