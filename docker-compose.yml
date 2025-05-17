@@ -89,6 +89,7 @@ services:
 volumes:
   redis-volume:
   backend-postgres-volume:
+  - /certs/drawtables/backend:$CERTS_DIR_NAME
 
 networks:
   backend-network:
