@@ -3,8 +3,8 @@ from datetime import datetime
 
 from pydantic import UUID4
 from sqlalchemy import UUID, ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column, synonym
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column, synonym
 
 from src.infrastructure.database.database import Base
 from src.projects.version.schemas import VersionSchema

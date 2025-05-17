@@ -1,10 +1,8 @@
 from pydantic import UUID4
 
-from src.core_.work_unit import UnitOfWork
+from src.ai_assistant.chat_history.schemas import AssistantChatMessageResponseSchema
 from src.core_.pagination.schemas import PaginationParams
-from src.ai_assistant.chat_history.schemas import (
-    AssistantChatMessageResponseSchema,
-)
+from src.core_.work_unit import UnitOfWork
 
 
 async def get_chat_history(
@@ -38,8 +36,8 @@ async def delete_chat_history(
             },
         )
         await uow.commit()
-        
-        
+
+
 async def create_chat_message(
     project_id: UUID4,
     user_message: str,

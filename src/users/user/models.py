@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from pydantic import UUID4
-from sqlalchemy import func, UUID
+from sqlalchemy import UUID, func
 from sqlalchemy.orm import Mapped, mapped_column, synonym
 
 from src.infrastructure.database.database import Base

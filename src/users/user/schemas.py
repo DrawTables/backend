@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import EmailStr, Field, SecretBytes, SecretStr, UUID4
+from pydantic import UUID4, EmailStr, Field, SecretBytes, SecretStr
 
-from src.core_.schemas import SchemaModel, RequestModel, ResponseModel
+from src.core_.schemas import RequestModel, ResponseModel, SchemaModel
 
 
 class UserSchema(SchemaModel):

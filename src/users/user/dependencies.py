@@ -2,8 +2,8 @@ from pydantic import UUID4
 
 from src.core_.work_unit import UnitOfWork
 from src.users.user.exceptions import (
-    UserByIdNotFound,
     UserByEmailAlreadyExists,
+    UserByIdNotFound,
     UserByUsernameAlreadyExists,
 )
 from src.users.user.schemas import UserCreateRequest

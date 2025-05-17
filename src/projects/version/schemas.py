@@ -22,6 +22,7 @@ class VersionCreateSchema(RequestModel):
     tables_coordinates: dict
     colors: dict
 
+
 class VersionUpdateSchema(RequestModel):
     tag: str | None = Field(default=None)
     dbml_text: str | None = Field(default=None)
@@ -33,8 +34,8 @@ class VersionResponseSchema(ResponseModel):
     tag: str | None = Field(default=None)
     parent_id: UUID4 | None = Field(default=None)
     created_at: datetime
-    
-    
+
+
 class VersionResponseExtendedSchema(ResponseModel):
     dbml_text: str
     tables_coordinates: dict

@@ -12,11 +12,11 @@ from src.projects.project.dependencies import (
 )
 from src.projects.project.schemas import (
     ProjectCreateRequest,
+    ProjectPullRequest,
+    ProjectPullResponse,
     ProjectResponse,
     ProjectUpdateRequest,
     ProjectUserPermissionsRequest,
-    ProjectPullRequest,
-    ProjectPullResponse,
 )
 
 ROUTER_V1_PREFIX = "/api/v1/projects"

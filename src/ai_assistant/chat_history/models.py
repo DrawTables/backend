@@ -5,8 +5,9 @@ from pydantic import UUID4
 from sqlalchemy import UUID, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, synonym
 
-from src.infrastructure.database.database import Base
 from src.ai_assistant.chat_history.schemas import AssistantChatMessageSchema
+from src.infrastructure.database.database import Base
+
 
 class AssistantChatMessage(Base):
     __tablename__ = "assistant_chat_message"

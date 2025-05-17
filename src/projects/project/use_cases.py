@@ -128,7 +128,7 @@ async def get_project_by_pull_request(
                 "owner_user_id": user.user_id,
             },
         )
-        
+
         last_version = await uow.versions.get_by_filters(
             filter_by={
                 "project_id": project.project_id,

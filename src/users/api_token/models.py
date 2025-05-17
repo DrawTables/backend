@@ -24,7 +24,6 @@ class ApiToken(Base):
     )
     token: Mapped[str]
 
-
     def to_schema(self) -> ApiTokenSchema:
         return ApiTokenSchema.model_validate(self)
 

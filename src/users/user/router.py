@@ -1,16 +1,10 @@
 from fastapi import APIRouter, Depends, Response, status
 
-from src.auth.tokens.dependencies import (
-    get_current_user as current_user,
-    is_verified_user,
-)
+from src.auth.tokens.dependencies import get_current_user as current_user
+from src.auth.tokens.dependencies import is_verified_user
 from src.users.user import use_cases
 from src.users.user.dependencies import user_by_username_or_email_not_exists
-from src.users.user.schemas import (
-    UserCreateRequest,
-    UserResponse,
-    UserUpdateRequest,
-)
+from src.users.user.schemas import UserCreateRequest, UserResponse, UserUpdateRequest
 
 ROUTER_V1_PREFIX = "/api/v1/users"
 

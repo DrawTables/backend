@@ -43,7 +43,7 @@ async def create_version(
     uow = UnitOfWork()
     data = body.model_dump()
     data["project_id"] = project_id
-    
+
     async with uow:
         last_version = await uow.versions.get_by_filters(
             filter_by={
@@ -51,9 +51,9 @@ async def create_version(
                 "tag": "latest",
             },
         )
-        
+
         if not last_version:
-            if body.tag == None:
+            if body.tag is None:
                 data["tag"] = "latest"
             new_version_id = await uow.versions.add(
                 data={
@@ -61,7 +61,7 @@ async def create_version(
                     "parent_id": None,
                 },
             )
-            if body.tag != None:
+            if body.tag is not None:
                 await uow.versions.add(
                     data={
                         "project_id": project_id,
@@ -74,8 +74,8 @@ async def create_version(
                 )
             await uow.commit()
             return new_version_id
-        
-        if body.tag == None:
+
+        if body.tag is None:
             new_version_id = await uow.versions.update_by_id(
                 data={
                     **data,
@@ -98,7 +98,6 @@ async def create_version(
                 },
                 entity_id=last_version[0].version_id,
             )
-            
 
         await uow.commit()
 
