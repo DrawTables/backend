@@ -118,7 +118,8 @@ services:
 volumes:
   redis-volume:
   backend-postgres-volume:
-
+  sandbox-postgres-volume:
+  
 networks:
   backend-network:
     driver: bridge
