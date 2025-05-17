@@ -8,7 +8,7 @@ from src.projects.version.schemas import (
     VersionResponseSchema,
     VersionUpdateSchema,
 )
-
+from src.projects.version.models import Version
 
 async def get_versions(
     project_id: UUID4,
@@ -19,6 +19,7 @@ async def get_versions(
             filter_by={
                 "project_id": project_id,
             },
+            order_by=Version.created_at.desc(),
         )
 
     return versions
