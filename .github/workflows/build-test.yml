@@ -1,0 +1,30 @@
+name: Build Test
+on:
+  push:
+    branches: [ develop ]
+
+env:
+  OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
+
+jobs:
+  build:
+    runs-on:
+      labels: runner-production
+
+    steps:
+      - name: Get Updates
+        uses: actions/checkout@v3
+
+      - name: Create Env-files
+        run: cp docker/docker-compose.env.template docker/docker-compose.env
+
+      - name: Build the Docker Image
+        run: docker compose --env-file ./docker/docker-compose.env build backend 
+
+      - name: Remove Container
+        run: docker ps -a --format="{{.ID}} {{.Names}}"
+          | awk '{if ($2 == "drawtables-backend") print $1}'
+          | xargs --no-run-if-empty docker rm -f
+
+      - name: Restart Container
+        run: docker compose --env-file ./docker/docker-compose.env up -d backend

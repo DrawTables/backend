@@ -87,8 +87,10 @@ services:
       - "127.0.0.1:${BACKEND_API_PORT_EXTERNAL}:${BACKEND_API_PORT}"
 
 volumes:
+- /certs/drawtables/backend: /$CERTS_DIR_NAME
   redis-volume:
   backend-postgres-volume:
+
 
 networks:
   backend-network:
