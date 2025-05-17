@@ -1042,6 +1042,21 @@ files = [
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
+name = "pydbml"
+version = "1.2.0"
+description = "Python parser and builder for DBML"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "pydbml-1.2.0-py3-none-any.whl", hash = "sha256:dc663786647c97bbb6ef61f7a5becd5e7bb304770bb3e2e01d3f43748d33064f"},
+    {file = "pydbml-1.2.0.tar.gz", hash = "sha256:c4fdb602f62b42e2b28674ea45e72f3d0e88bc6d186ea3a683685c41662ece14"},
+]
+
+[package.dependencies]
+pyparsing = ">=3.0.0"
+
+[[package]]
 name = "pyjwt"
 version = "2.10.1"
 description = "JSON Web Token implementation in Python"
@@ -1061,6 +1076,21 @@ crypto = ["cryptography (>=3.4.0)"]
 dev = ["coverage[toml] (==5.0.4)", "cryptography (>=3.4.0)", "pre-commit", "pytest (>=6.0.0,<7.0.0)", "sphinx", "sphinx-rtd-theme", "zope.interface"]
 docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
 tests = ["coverage[toml] (==5.0.4)", "pytest (>=6.0.0,<7.0.0)"]
+
+[[package]]
+name = "pyparsing"
+version = "3.2.3"
+description = "pyparsing module - Classes and methods to define and execute parsing grammars"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pyparsing-3.2.3-py3-none-any.whl", hash = "sha256:a749938e02d6fd0b59b356ca504a24982314bb090c383e3cf201c95ef7e2bfcf"},
+    {file = "pyparsing-3.2.3.tar.gz", hash = "sha256:b9c13f1ab8b3b542f72e28f634bad4de758ab3ce4546e4301970ad6fa77c38be"},
+]
+
+[package.extras]
+diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "python-dotenv"
@@ -1306,4 +1336,4 @@ standard = ["colorama (>=0.4) ; sys_platform == \"win32\"", "httptools (>=0.6.3)
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "4a132e0a47b5edc63ebf5a5f003415573810148fb720de06a73f899269b96a33"
+content-hash = "31362f220eb8c6bf5cdb77db261ec6c43479a1b626afde537d1410fc03dbf768"

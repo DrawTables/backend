@@ -1,4 +1,4 @@
-from src.config.postgres.settings import POSTGRES_URI
+from src.config.postgres.settings import POSTGRES_URI, get_sandbox_postgres_uri
 from src.config.redis.settings import REDIS_URI
 from src.config.settings import (
     BACKEND_API_PORT,

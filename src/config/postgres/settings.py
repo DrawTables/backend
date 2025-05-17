@@ -19,7 +19,22 @@ POSTGRES_URI = (
     )
 )
 
+POSTGRES_SANDBOX_HOST: str = os.getenv("POSTGRES_SANDBOX_HOST")
+POSTGRES_SANDBOX_PORT: int = int(os.getenv("POSTGRES_SANDBOX_PORT"))
+POSTGRES_SANDBOX_USER: str = os.getenv("POSTGRES_SANDBOX_USER")
+POSTGRES_SANDBOX_PASS: str = os.getenv("POSTGRES_SANDBOX_PASS")
 
+def get_sandbox_postgres_uri(database_name: str) -> str:
+    return (
+        "postgresql+asyncpg://{0}:{1}@{2}:{3}/{4}".format(
+            POSTGRES_SANDBOX_USER,
+            POSTGRES_SANDBOX_PASS,
+            POSTGRES_SANDBOX_HOST,
+            POSTGRES_SANDBOX_PORT,
+            database_name,
+        )
+    )
+    
 if __name__ == "__main__":
     print(f"{POSTGRES_HOST=}")
     print(f"{POSTGRES_PORT=}")
