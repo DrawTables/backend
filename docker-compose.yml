@@ -88,8 +88,8 @@ services:
 
 volumes:
   - /certs/drawtables/backend:/certs
-  - redis-volume:
-  - backend-postgres-volume:
+  # - redis-volume:
+  # - backend-postgres-volume:
 
 networks:
   backend-network:
