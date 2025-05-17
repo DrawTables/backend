@@ -8,8 +8,6 @@ from src.projects.version.schemas import (
     VersionResponseSchema,
     VersionUpdateSchema,
 )
-from src.projects.version.models import Version
-from src.core_.pagination.schemas import PaginationParams
 
 
 async def get_versions(
@@ -69,6 +67,8 @@ async def create_version(
                         "project_id": project_id,
                         "tag": "latest",
                         "dbml_text": body.dbml_text,
+                        "tables_coordinates": body.tables_coordinates,
+                        "colors": body.colors,
                         "parent_id": new_version_id,
                     },
                 )

@@ -4,6 +4,7 @@ from datetime import datetime
 from pydantic import UUID4
 from sqlalchemy import UUID, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, synonym
+from sqlalchemy.dialects.postgresql import JSONB
 
 from src.infrastructure.database.database import Base
 from src.projects.version.schemas import VersionSchema
@@ -28,6 +29,8 @@ class Version(Base):
         nullable=True,
     )
     dbml_text: Mapped[str]
+    tables_coordinates: Mapped[dict] = mapped_column(type_=JSONB, nullable=True)
+    colors: Mapped[dict] = mapped_column(type_=JSONB, nullable=True)
     parent_id: Mapped[UUID4] = mapped_column(
         ForeignKey("version.version_id", ondelete="SET NULL"),
         nullable=True,

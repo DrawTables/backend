@@ -6,6 +6,7 @@ from src.users.user.repositories import UserRepository
 from src.projects.project.repositories import ProjectRepository, ProjectRealtionUserRepository
 from src.projects.version.repositories import VersionRepository
 from src.users.api_token.repositories import ApiTokenRepository
+from src.ai_assistant.chat_history.repositories import AssistantChatMessageRepository
 
 class IUnitOfWork(Protocol):
     # Users
@@ -16,7 +17,10 @@ class IUnitOfWork(Protocol):
     projects: IRepository
     projects_relation_users: IRepository
     versions: IRepository
-
+    
+    #Assistant Chat Messages
+    assistant_chat_messages: IRepository
+    
 
 class UnitOfWork:
     _session = None
@@ -37,6 +41,9 @@ class UnitOfWork:
         self.projects = ProjectRepository(self._session)
         self.projects_relation_users = ProjectRealtionUserRepository(self._session)
         self.versions = VersionRepository(self._session)
+        
+        #Assistant Chat Messages
+        self.assistant_chat_messages = AssistantChatMessageRepository(self._session)
         
     async def __aexit__(self, *args):
         await self.rollback()
