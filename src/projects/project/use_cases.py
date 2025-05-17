@@ -114,10 +114,10 @@ async def get_project_by_pull_request(
         user = await uow.users.get_by_filters(
             filter_by={"username": username},
         )
-        api_key = await uow.api_keys.get_by_filters(
+        api_key = await uow.api_tokens.get_by_filters(
             filter_by={
-                "user_id": user.user_id,
-                "api_key": api_key,
+                "user_id": user[0].user_id,
+                "token": api_key,
             },
         )
         if not api_key:
@@ -125,14 +125,14 @@ async def get_project_by_pull_request(
         project = await uow.projects.get_by_filters(
             filter_by={
                 "title": project_name,
-                "owner_user_id": user.user_id,
+                "owner_user_id": user[0].user_id,
             },
         )
 
         last_version = await uow.versions.get_by_filters(
             filter_by={
-                "project_id": project.project_id,
+                "project_id": project[0].project_id,
                 "tag": "latest",
             },
         )
-        return last_version.dbml_text
+        return last_version[0].dbml_text

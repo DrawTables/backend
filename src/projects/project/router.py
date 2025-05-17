@@ -9,6 +9,7 @@ from src.projects.project import use_cases
 from src.projects.project.dependencies import (
     project_by_id_exists,
     user_can_change_project,
+    user_have_read_access_to_project
 )
 from src.projects.project.schemas import (
     ProjectCreateRequest,
@@ -24,7 +25,6 @@ ROUTER_V1_PREFIX = "/api/v1/projects"
 projects_router_v1 = APIRouter(
     prefix=ROUTER_V1_PREFIX,
     tags=["Projects v1"],
-    dependencies=[Depends(is_verified_user)],
 )
 
 
@@ -49,7 +49,7 @@ async def get_projects(
     }
 
 
-@projects_router_v1.get(
+@projects_router_v1.post(
     path="/pull",
     response_model=ProjectPullResponse,
 )
@@ -66,11 +66,16 @@ async def pull_project(
 @projects_router_v1.get(
     path="/{project_id}",
     response_model=ProjectResponse,
-    dependencies=[Depends(project_by_id_exists)],
+    dependencies=[Depends(project_by_id_exists), Depends(is_verified_user)],
 )
 async def get_project(
     project_id: str,
+    user: dict = Depends(current_user),
 ) -> ProjectResponse:
+    await user_have_read_access_to_project(
+        project_id=project_id,
+        user_id=user
+    )
     return await use_cases.get_project_by_id(project_id)
 
 

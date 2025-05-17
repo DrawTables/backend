@@ -42,8 +42,8 @@ class ProjectUserPermissionsRequest(RequestModel):
 
 
 class ProjectPullRequest(RequestModel):
-    project_url: UUID4
-    api_key: UUID4
+    project_url: str
+    api_key: str
 
 
 class ProjectPullResponse(ResponseModel):
