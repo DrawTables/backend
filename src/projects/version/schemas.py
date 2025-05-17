@@ -10,6 +10,8 @@ class VersionSchema(SchemaModel):
     project_id: UUID4
     tag: str | None = Field(default=None)
     dbml_text: str
+    tables_coordinates: dict
+    colors: dict
     parent_id: UUID4 | None = Field(default=None)
     created_at: datetime
 
@@ -17,6 +19,8 @@ class VersionSchema(SchemaModel):
 class VersionCreateSchema(RequestModel):
     tag: str | None = Field(default=None)
     dbml_text: str
+    tables_coordinates: dict
+    colors: dict
 
 
 class VersionUpdateSchema(RequestModel):
@@ -30,7 +34,9 @@ class VersionResponseSchema(ResponseModel):
     tag: str | None = Field(default=None)
     parent_id: UUID4 | None = Field(default=None)
     created_at: datetime
-    
-    
+
+
 class VersionResponseExtendedSchema(ResponseModel):
     dbml_text: str
+    tables_coordinates: dict
+    colors: dict

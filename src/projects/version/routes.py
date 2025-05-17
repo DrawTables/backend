@@ -3,13 +3,17 @@ from pydantic import UUID4
 
 from src.auth.tokens.dependencies import is_verified_user
 from src.projects.project.dependencies import (
+    project_by_id_exists,
     user_have_read_access_to_project,
     user_have_write_access_to_project,
 )
 from src.projects.version import use_cases
 from src.projects.version.dependencies import version_by_id_exists
-from src.projects.project.dependencies import project_by_id_exists
-from src.projects.version.schemas import VersionCreateSchema, VersionResponseSchema, VersionResponseExtendedSchema
+from src.projects.version.schemas import (
+    VersionCreateSchema,
+    VersionResponseExtendedSchema,
+    VersionResponseSchema,
+)
 
 ROUTER_V1_PREFIX = "/api/v1/projects/versions"
 

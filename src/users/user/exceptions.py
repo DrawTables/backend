@@ -1,4 +1,4 @@
-from pydantic import EmailStr, UUID4
+from pydantic import UUID4, EmailStr
 
 from src.exceptions import AlreadyExists, NotFound
 

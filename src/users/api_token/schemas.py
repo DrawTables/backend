@@ -7,8 +7,8 @@ class ApiTokenSchema(SchemaModel):
     api_token_id: UUID4
     user_id: UUID4
     token: str
-    
-    
+
+
 class ApiTokenResponse(ApiTokenSchema, ResponseModel):
     pass
 

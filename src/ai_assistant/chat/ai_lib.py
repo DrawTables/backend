@@ -1,10 +1,7 @@
 from openai import OpenAI
 
-from src.config.ai_assistant.settings import (
-    OPEN_AI_API_KEY,
-    OPEN_AI_BASE_URL,
-)
-from src.ai_assistant.utils import remove_code_markers
+from src.ai_assistant.chat.utils import remove_code_markers
+from src.config.ai_assistant.settings import OPEN_AI_API_KEY, OPEN_AI_BASE_URL
 
 client = OpenAI(api_key=OPEN_AI_API_KEY, base_url=OPEN_AI_BASE_URL)
 
@@ -15,14 +12,15 @@ BASE_PROMPT = (
     "Do not add any other text."
 )
 
-def generate_dbml_code(user_prompt: str) -> str:
+
+async def generate_dbml_code(user_prompt: str) -> str:
     response = client.chat.completions.create(
         model="deepseek-chat",
         messages=[
             {"role": "system", "content": BASE_PROMPT},
             {"role": "user", "content": user_prompt},
         ],
-        stream=False 
+        stream=False,
     )
 
     text_response = response.choices[0].message.content

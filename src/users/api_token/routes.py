@@ -3,9 +3,9 @@ from pydantic import UUID4
 
 from src.auth.tokens.dependencies import get_current_user as current_user
 from src.auth.tokens.dependencies import is_verified_user
-from src.users.api_token.schemas import ApiTokenResponse, ApiTokenCreateResponse
 from src.users.api_token import use_cases
 from src.users.api_token.dependencies import can_access_token
+from src.users.api_token.schemas import ApiTokenCreateResponse, ApiTokenResponse
 
 ROUTER_V1_PREFIX = "/api/v1/api-tokens"
 
@@ -14,6 +14,7 @@ api_tokens_router_v1 = APIRouter(
     tags=["Api-Tokens v1"],
     dependencies=[Depends(is_verified_user)],
 )
+
 
 @api_tokens_router_v1.get(
     path="",
@@ -43,12 +44,12 @@ async def create_api_token(
     return {
         "token": token,
     }
-    
-    
+
+
 @api_tokens_router_v1.delete(
     path="/{token_id}",
     dependencies=[Depends(can_access_token)],
-    status_code=status.HTTP_204_NO_CONTENT,    
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_api_token(
     token_id: UUID4,
@@ -56,4 +57,3 @@ async def delete_api_token(
     await use_cases.delete_api_token(
         token_id=token_id,
     )
-    
