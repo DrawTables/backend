@@ -44,6 +44,31 @@ services:
     ports:
       - "127.0.0.1:${POSTGRES_PORT_EXTERNAL}:${POSTGRES_PORT}"
 
+  sandbox-postgres:
+    image: postgres:12-alpine
+    container_name: drawtables-sandbox-postgres
+    hostname: sandbox_postgres_host
+    restart: always
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"
+        max-file: "2"
+
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_DB=${POSTGRES_SANDBOX_BASE}
+      - POSTGRES_USER=${POSTGRES_SANDBOX_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_SANDBOX_PASS}
+
+    volumes:
+      - sandbox-postgres-volume:/var/lib/postgresql/data/pgdata
+    networks:
+      - backend-network
+    ports:
+      - "127.0.0.1:${POSTGRES_SANDBOX_PORT_EXTERNAL}:${POSTGRES_PORT}"
+
   backend:
     build:
       context: ./
