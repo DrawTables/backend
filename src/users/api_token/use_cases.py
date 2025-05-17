@@ -35,12 +35,11 @@ async def delete_api_token(
         
         
 async def get_api_tokens(
-    uow: UnitOfWork,
     user_id: UUID4,
 ) -> list[ApiTokenSchema]:
     uow = UnitOfWork()
     async with uow:
         tokens = await uow.api_tokens.get_by_filters(
-            filters={"user_id": user_id}
+            filter_by={"user_id": user_id}
         )
         return tokens

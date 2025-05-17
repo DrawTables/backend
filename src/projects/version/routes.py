@@ -8,6 +8,7 @@ from src.projects.project.dependencies import (
 )
 from src.projects.version import use_cases
 from src.projects.version.dependencies import version_by_id_exists
+from src.projects.project.dependencies import project_by_id_exists
 from src.projects.version.schemas import VersionCreateSchema, VersionResponseSchema, VersionResponseExtendedSchema
 
 ROUTER_V1_PREFIX = "/api/v1/projects/versions"
@@ -53,7 +54,7 @@ async def get_version(
 
 
 @versions_router_v1.post(
-    path="",
+    path="/push",
     status_code=status.HTTP_201_CREATED,
     dependencies=[
         Depends(user_have_write_access_to_project),
@@ -71,19 +72,19 @@ async def create_version(
     response.headers["Location"] = f"{ROUTER_V1_PREFIX}/{version_id}"
 
 
-@versions_router_v1.patch(
-    path="/{version_id}",
+@versions_router_v1.delete(
+    path="/pop",
     status_code=status.HTTP_204_NO_CONTENT,
     dependencies=[
-        Depends(version_by_id_exists),
         Depends(user_have_write_access_to_project),
     ],
 )
-async def update_version(
-    version_id: UUID4,
-    body: VersionCreateSchema,
+async def delete_version(
+    project_id: UUID4 = Query(default=None, alias="projectId"),
 ):
-    await use_cases.update_version(
-        version_id=version_id,
-        body=body,
+    await project_by_id_exists(
+        project_id=project_id,
+    )
+    await use_cases.delete_last_version(
+        project_id=project_id,
     )

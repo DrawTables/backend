@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import UUID4
 
 from src.core_.work_unit import UnitOfWork
@@ -6,6 +8,8 @@ from src.projects.version.schemas import (
     VersionResponseSchema,
     VersionUpdateSchema,
 )
+from src.projects.version.models import Version
+from src.core_.pagination.schemas import PaginationParams
 
 
 async def get_versions(
@@ -41,11 +45,64 @@ async def create_version(
     uow = UnitOfWork()
     data = body.model_dump()
     data["project_id"] = project_id
+    
     async with uow:
-        version_id: UUID4 = await uow.versions.create(data=data)
+        last_version = await uow.versions.get_by_filters(
+            filter_by={
+                "project_id": project_id,
+                "tag": "latest",
+            },
+        )
+        
+        if not last_version:
+            if body.tag == None:
+                data["tag"] = "latest"
+            new_version_id = await uow.versions.add(
+                data={
+                    **data,
+                    "parent_id": None,
+                },
+            )
+            if body.tag != None:
+                await uow.versions.add(
+                    data={
+                        "project_id": project_id,
+                        "tag": "latest",
+                        "dbml_text": body.dbml_text,
+                        "parent_id": new_version_id,
+                    },
+                )
+            await uow.commit()
+            return new_version_id
+        
+        if body.tag == None:
+            new_version_id = await uow.versions.update_by_id(
+                data={
+                    **data,
+                    "parent_id": last_version[0].parent_id if last_version else None,
+                    "created_at": datetime.now(),
+                },
+                entity_id=last_version[0].version_id,
+            )
+        else:
+            new_version_id = await uow.versions.add(
+                data={
+                    **data,
+                    "parent_id": last_version[0].parent_id,
+                },
+            )
+            await uow.versions.update_by_id(
+                data={
+                    "parent_id": new_version_id,
+                    "created_at": datetime.now(),
+                },
+                entity_id=last_version[0].version_id,
+            )
+            
+
         await uow.commit()
 
-    return version_id
+    return new_version_id
 
 
 async def update_version(
@@ -59,11 +116,18 @@ async def update_version(
         await uow.commit()
 
 
-async def delete_version(
-    version_id: UUID4,
+async def delete_last_version(
+    project_id: UUID4,
 ):
     uow = UnitOfWork()
 
     async with uow:
-        await uow.versions.delete(entity_id=version_id)
+        last_version = await uow.versions.get_by_filters(
+            filter_by={
+                "project_id": project_id,
+                "tag": "latest",
+            },
+        )
+        if last_version:
+            await uow.versions.delete(entity_id=last_version[0].parent_id)
         await uow.commit()

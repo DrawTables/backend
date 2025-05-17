@@ -23,7 +23,10 @@ class Version(Base):
         index=True,
     )
 
-    tag: Mapped[str]
+    tag: Mapped[str] = mapped_column(
+        index=True,
+        nullable=True,
+    )
     dbml_text: Mapped[str]
     parent_id: Mapped[UUID4] = mapped_column(
         ForeignKey("version.version_id", ondelete="SET NULL"),
