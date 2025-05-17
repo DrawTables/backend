@@ -39,3 +39,12 @@ class ProjectUserPermissionsRequest(RequestModel):
     user_id: UUID4
     read_permission: bool = Field(default=True)
     write_permission: bool = Field(default=False)
+
+
+class ProjectPullRequest(RequestModel):
+    project_url: UUID4
+    api_key: UUID4
+    
+    
+class ProjectPullResponse(ResponseModel):
+    dbml: str

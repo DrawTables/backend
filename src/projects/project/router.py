@@ -15,6 +15,8 @@ from src.projects.project.schemas import (
     ProjectResponse,
     ProjectUpdateRequest,
     ProjectUserPermissionsRequest,
+    ProjectPullRequest,
+    ProjectPullResponse,
 )
 
 ROUTER_V1_PREFIX = "/api/v1/projects"
@@ -45,6 +47,20 @@ async def get_projects(
         "entities": projects,
         "entities_amount": amount,
     }
+
+
+@projects_router_v1.get(
+    path="/pull",
+    response_model=ProjectPullResponse,
+)
+async def pull_project(
+    body: ProjectPullRequest,
+):
+    dbml_text = await use_cases.get_project_by_pull_request(
+        project_url=body.project_url,
+        api_key=body.api_key,
+    )
+    return ProjectPullResponse(dbml=dbml_text)
 
 
 @projects_router_v1.get(

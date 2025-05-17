@@ -102,3 +102,37 @@ async def change_user_permissions(
                 },
             )
         await uow.commit()
+
+
+async def get_project_by_pull_request(
+    project_url: str,
+    api_key: str,
+) -> ProjectSchema:
+    uow = UnitOfWork()
+    async with uow:
+        username, project_name = project_url.split("/")[-2:]
+        user = await uow.users.get_by_filters(
+            filter_by={"username": username},
+        )
+        api_key = await uow.api_keys.get_by_filters(
+            filter_by={
+                "user_id": user.user_id,
+                "api_key": api_key,
+            },
+        )
+        if not api_key:
+            raise Exception("API key not found")
+        project = await uow.projects.get_by_filters(
+            filter_by={
+                "title": project_name,
+                "owner_user_id": user.user_id,
+            },
+        )
+        
+        last_version = await uow.versions.get_by_filters(
+            filter_by={
+                "project_id": project.project_id,
+                "tag": "latest",
+            },
+        )
+        return last_version.dbml_text

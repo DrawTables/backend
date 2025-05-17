@@ -5,10 +5,12 @@ from src.infrastructure.database.database import async_session_maker
 from src.users.user.repositories import UserRepository
 from src.projects.project.repositories import ProjectRepository, ProjectRealtionUserRepository
 from src.projects.version.repositories import VersionRepository
+from src.users.api_token.repositories import ApiTokenRepository
 
 class IUnitOfWork(Protocol):
     # Users
     users: IRepository
+    api_tokens: IRepository
     
     #Projects
     projects: IRepository
@@ -29,7 +31,8 @@ class UnitOfWork:
 
         # Users
         self.users = UserRepository(self._session)
-
+        self.api_tokens = ApiTokenRepository(self._session)
+        
         # Projects
         self.projects = ProjectRepository(self._session)
         self.projects_relation_users = ProjectRealtionUserRepository(self._session)

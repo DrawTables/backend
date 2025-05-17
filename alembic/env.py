@@ -10,6 +10,7 @@ from src.config import POSTGRES_URI
 from src.infrastructure.database.database import Base
 from src.projects.project.models import Project
 from src.projects.version.models import Version
+from src.users.api_token.models import ApiToken
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
