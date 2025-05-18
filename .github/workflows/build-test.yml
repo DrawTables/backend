@@ -10,7 +10,7 @@ env:
 jobs:
   build:
     runs-on:
-      labels: runner-production
+      labels: runner-test
 
     steps:
       - name: Get Updates
