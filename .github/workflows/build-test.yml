@@ -5,6 +5,7 @@ on:
 
 env:
   OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
+  PROXY_URL: ${{ secrets.PROXY_URL }}
 
 jobs:
   build:
