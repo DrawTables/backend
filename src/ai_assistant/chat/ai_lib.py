@@ -1,9 +1,13 @@
 from openai import OpenAI
-
+from httpx import Client
 from src.ai_assistant.chat.utils import remove_code_markers
-from src.config.ai_assistant.settings import OPEN_AI_API_KEY, OPEN_AI_BASE_URL
+from src.config.ai_assistant.settings import OPEN_AI_API_KEY, OPEN_AI_BASE_URL, PROXY_URL
 
-client = OpenAI(api_key=OPEN_AI_API_KEY, base_url=OPEN_AI_BASE_URL)
+http_client = None
+if PROXY_URL:
+    http_client = Client(proxy=PROXY_URL)
+    
+client = OpenAI(api_key=OPEN_AI_API_KEY, base_url=OPEN_AI_BASE_URL, http_client=http_client)
 
 DBML_BASE_PROMPT = (
     "User write requests to you, to generate database models."
