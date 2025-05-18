@@ -74,7 +74,7 @@ async def get_project(
 ) -> ProjectResponse:
     await user_have_read_access_to_project(
         project_id=project_id,
-        user_id=user
+        user=user
     )
     return await use_cases.get_project_by_id(project_id)
 
